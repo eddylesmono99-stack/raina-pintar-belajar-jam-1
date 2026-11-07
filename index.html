@@ -1,1 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#7136b8">
+<title>Raina Pintar Belajar Jam</title>
 
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#f6f0ff;
+ color:#35234e;
+}
+header{
+ background:linear-gradient(135deg,#6735a8,#9360d5);
+ color:white;padding:22px 18px;
+ border-radius:0 0 28px 28px;
+}
+header h1{margin:0;font-size:23px}
+header p{margin:8px 0 0}
+.container{max-width:650px;margin:auto;padding:18px}
+.card{
+ background:white;padding:18px;margin-bottom:16px;
+ border-radius:20px;
+ box-shadow:0 4px 14px #4b277414;
+}
+h2{font-size:20px;margin-top:0}
+button{
+ border:0;border-radius:14px;padding:13px 17px;
+ background:#713bb5;color:white;font-size:15px;
+ font-weight:bold;cursor:pointer;margin:4px;
+}
+button.yellow{background:#ffcf48;color:#553b12}
+button.light{background:#eee3ff;color:#60349b}
+button:active{transform:scale(.97)}
+.menu{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.menu button{min-height:85px;font-size:16px}
+.raina{
+ font-size:65px;text-align:center;margin:5px;
+}
+.clock{
+ width:260px;height:260px;max-width:100%;
+ display:block;margin:15px auto;
+}
+.digital{
+ text-align:center;font-size:36px;
+ font-weight:bold;color:#713bb5;
+}
+.info{text-align:center;line-height:1.6}
+.hidden{display:none}
+.progress{
+ background:#eee;border-radius:20px;height:12px;
+ overflow:hidden;margin:10px 0;
+}
+.progress div{background:#ffc83d;height:100%;width:0%}
+.question{font-size:19px;font-weight:bold}
+footer{text-align:center;padding:20px;color:#806d97;font-size:12px}
+.small{font-size:13px;color:#806d97}
+</style>
+</head>
+
+<body>
+
+<header>
+ <h1>🌟 Raina Pintar Belajar Jam</h1>
+ <p>Edhie EduKids • Learn • Play • Grow</p>
+</header>
+
+<main class="container">
+
+<section id="home">
+ <div class="card">
+  <div class="raina">👧🏻</div>
+  <h2 style="text-align:center">Halo, Teman Pintar!</h2>
+  <p class="info">
+   Aku Raina! Yuk, belajar membaca jam bersama.
+   Kita belajar sambil bermain! 💜
+  </p>
+  <button style="width:100%" onclick="show('learning')">
+   🚀 MULAI BELAJAR
+  </button>
+ </div>
+
+ <div class="card">
+  <h2>📚 Menu Belajar</h2>
+  <div class="menu">
+   <button onclick="show('learning')">📖 Mengenal Jam</button>
+   <button onclick="show('clock')">🕒 Jam Interaktif</button>
+   <button onclick="show('practice')">✏️ Latihan Soal</button>
+   <button onclick="show('quiz')">🏆 Kuis Seru</button>
+  </div>
+ </div>
+
+ <div class="card">
+  <h2>⭐ Perjalanan Belajarku</h2>
+  <p id="starCount">0 ⭐ Bintang</p>
+  <div class="progress"><div id="progressBar"></div></div>
+  <p class="small">Terus belajar bersama Raina!</p>
+ </div>
+</section>
+
+<section id="learning" class="hidden">
+ <div class="card">
+  <h2>📖 Level 1 — Mengenal Jam</h2>
+  <div class="raina">👧🏻</div>
+  <p class="info">Hai! Jam membantu kita mengetahui waktu.</p>
+  <h2>Kenali bagian-bagian jam!</h2>
+  <p>🔢 Jam memiliki angka dari 1 sampai 12.</p>
+  <p>🟣 Jarum pendek menunjukkan JAM.</p>
+  <p>🟡 Jarum panjang menunjukkan MENIT.</p>
+  <button onclick="speak('Jam membantu kita mengetahui waktu. Jarum pendek menunjukkan jam. Jarum panjang menunjukkan menit.')">
+   🔊 Dengarkan Raina
+  </button>
+  <button class="yellow" onclick="show('clock')">
+   Coba Jam Interaktif →
+  </button>
+  <button class="light" onclick="show('home')">Kembali</button>
+ </div>
+</section>
+
+<section id="clock" class="hidden">
+ <div class="card">
+  <h2>🕒 Jam Interaktif</h2>
+  <p class="info">Geser jarum jam untuk mengubah waktu!</p>
+
+  <svg id="clockSvg" class="clock" viewBox="0 0 260 260">
+   <circle cx="130" cy="130" r="119"
+    fill="#fff8e8" stroke="#713bb5" stroke-width="6"/>
+   <g id="numbers"></g>
+   <line id="hourHand" x1="130" y1="130"
+    x2="130" y2="78" stroke="#713bb5"
+    stroke-width="9" stroke-linecap="round"/>
+   <line id="minuteHand" x1="130" y1="130"
+    x2="130" y2="48" stroke="#f2b900"
+    stroke-width="6" stroke-linecap="round"/>
+   <circle cx="130" cy="130" r="8" fill="#713bb5"/>
+  </svg>
+
+  <div class="digital" id="digital">03:00</div>
+  <p class="info" id="clockText">Sekarang pukul tiga tepat!</p>
+
+  <div style="text-align:center">
+   <button class="yellow" onclick="changeTime(-1)">− Jam</button>
+   <button onclick="changeTime(1)">+ Jam</button>
+   <button class="light" onclick="changeMinute(5)">+5 Menit</button>
+   <button class="light" onclick="resetClock()">Reset</button>
+   <button onclick="speak('Sekarang pukul '+hour+' lewat '+minute+' menit')">
+    🔊 Dengarkan
+   </button>
+  </div>
+  <p class="small info">Catatan: gunakan tombol untuk menggerakkan jarum. Fitur geser langsung akan disempurnakan pada tahap berikutnya.</p>
+  <button class="light" onclick="show('home')">Kembali ke Menu</button>
+ </div>
+</section>
+
+<section id="practice" class="hidden">
+ <div class="card">
+  <h2>✏️ Latihan Membaca Jam</h2>
+  <div class="raina">👧🏻</div>
+  <p id="practiceQuestion" class="question">Jam menunjukkan pukul berapa?</p>
+  <div id="practiceOptions"></div>
+  <p id="practiceFeedback"></p>
+  <button class="light" onclick="show('home')">Kembali</button>
+ </div>
+</section>
+
+<section id="quiz" class="hidden">
+ <div class="card">
+  <h2>🏆 Kuis Seru Raina</h2>
+  <p id="quizNumber">Soal 1 dari 5</p>
+  <div class="progress"><div id="quizProgress"></div></div>
+  <p id="quizQuestion" class="question"></p>
+  <div id="quizOptions"></div>
+  <p id="quizFeedback"></p>
+  <button id="nextButton" class="yellow hidden" onclick="nextQuestion()">Soal Berikutnya →</button>
+  <div id="quizResult" class="hidden"></div>
+  <button class="light" onclick="show('home')">Kembali</button>
+ </div>
+</section>
+
+</main>
+
+<footer>
+ Edhie EduKids © 2026<br>
+ Raina Pintar Belajar Jam v1.0
+</footer>
+
+<script>
+let hour=3,minute=0,stars=0;
+
+function show(id){
+ document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));
+ document.getElementById(id).classList.remove('hidden');
+ if(id==='practice') loadPractice();
+ if(id==='quiz') startQuiz();
+ window.scrollTo(0,0);
+}
+
+function speak(text){
+ if(!('speechSynthesis' in window)){
+  alert('Audio belum didukung browser ini.');
+  return;
+ }
+ speechSynthesis.cancel();
+ let msg=new SpeechSynthesisUtterance(text);
+ msg.lang='id-ID';
+ msg.rate=.85;
+ speechSynthesis.speak(msg);
+}
+
+function drawNumbers(){
+ let g=document.getElementById('numbers');
+ for(let i=1;i<=12;i++){
+  let a=i*Math.PI/6;
+  let x=130+91*Math.sin(a);
+  let y=130-91*Math.cos(a);
+  let t=document.createElementNS('http://www.w3.org/2000/svg','text');
+  t.setAttribute('x',x);
+  t.setAttribute('y',y+7);
+  t.setAttribute('text-anchor','middle');
+  t.setAttribute('font-size','17');
+  t.setAttribute('font-weight','bold');
+  t.setAttribute('fill','#56337e');
+  t.textContent=i;
+  g.appendChild(t);
+ }
+}
+
+function updateClock(){
+ let ha=(hour%12+minute/60)*Math.PI/6;
+ let ma=minute*Math.PI/30;
+ document.getElementById('hourHand').setAttribute('x2',130+55*Math.sin(ha));
+ document.getElementById('hourHand').setAttribute('y2',130-55*Math.cos(ha));
+ document.getElementById('minuteHand').setAttribute('x2',130+83*Math.sin(ma));
+ document.getElementById('minuteHand').setAttribute('y2',130-83*Math.cos(ma));
+ document.getElementById('digital').textContent=
+ String(hour).padStart(2,'0')+':'+String(minute).padStart(2,'0');
+ document.getElementById('clockText').textContent=
+ 'Sekarang pukul '+hour+' lewat '+minute+' menit.';
+}
+
+function changeTime(n){
+ hour=((hour+n-1+12)%12)+1;
+ updateClock();
+}
+function changeMinute(n){
+ minute=(minute+n)%60;
+ if(minute===0)hour=hour%12+1;
+ updateClock();
+}
+function resetClock(){hour=3;minute=0;updateClock();}
+
+drawNumbers();
+updateClock();
+
+const questions=[
+ {q:'Jarum pendek menunjukkan pukul berapa?',a:['Pukul 3','Pukul 6','Pukul 9'],c:0},
+ {q:'Ada berapa angka pada jam analog?',a:['10 angka','12 angka','15 angka'],c:1},
+ {q:'Jarum panjang menunjukkan apa?',a:['Hari','Menit','Bulan'],c:1},
+ {q:'Pukul 07.00 berarti?',a:['Jam tujuh tepat','Jam delapan','Jam lima'],c:0},
+ {q:'Jam digunakan untuk mengetahui?',a:['Waktu','Warna','Berat'],c:0}
+];
+
+let qi=0,correct=0,answered=false;
+
+function startQuiz(){
+ qi=0;correct=0;
+ document.getElementById('quizResult').classList.add('hidden');
+ document.getElementById('quizOptions').classList.remove('hidden');
+ document.getElementById('nextButton').classList.add('hidden');
+ renderQuestion();
+}
+
+function renderQuestion(){
+ answered=false;
+ let q=questions[qi];
+ document.getElementById('quizNumber').textContent='Soal '+(qi+1)+' dari '+questions.length;
+ document.getElementById('quizProgress').style.width=(qi/questions.length*100)+'%';
+ document.getElementById('quizQuestion').textContent=q.q;
+ document.getElementById('quizFeedback').textContent='';
+ let box=document.getElementById('quizOptions');
+ box.innerHTML='';
+ q.a.forEach((a,i)=>{
+  let b=document.createElement('button');
+  b.className='light';
+  b.style.display='block';
+  b.style.width='100%';
+  b.textContent=a;
+  b.onclick=()=>answer(i);
+  box.appendChild(b);
+ });
+}
+
+function answer(i){
+ if(answered)return;
+ answered=true;
+ if(i===questions[qi].c){
+  correct++;
+  document.getElementById('quizFeedback').textContent='Hebat! Jawabanmu benar! 🌟';
+ }else{
+  document.getElementById('quizFeedback').textContent=
+   'Belum tepat. Jawaban yang benar: '+questions[qi].a[questions[qi].c];
+ }
+ document.getElementById('nextButton').classList.remove('hidden');
+}
+
+function nextQuestion(){
+ qi++;
+ if(qi<questions.length){renderQuestion();return;}
+ let score=Math.round(correct/questions.length*100);
+ document.getElementById('quizOptions').classList.add('hidden');
+ document.getElementById('nextButton').classList.add('hidden');
+ document.getElementById('quizProgress').style.width='100%';
+ let r=document.getElementById('quizResult');
+ r.classList.remove('hidden');
+ r.innerHTML='<h2>Hasil Kuis 🌟</h2><h1>'+score+'%</h1>'+
+ '<p>'+correct+' dari '+questions.length+' jawaban benar.</p>'+
+ '<p>'+(score>=80?'Hebat! Kamu lulus! 🎉':'Semangat! Ayo belajar lagi! 💜')+'</p>'+
+ '<button onclick="startQuiz()">Ulangi Kuis</button>';
+ if(score>=80){stars+=5;saveStars();}
+}
+
+let practiceDone=false;
+function loadPractice(){
+ let opts=['Pukul 3','Pukul 6','Pukul 9'];
+ document.getElementById('practiceOptions').innerHTML='';
+ opts.forEach((v,i)=>{
+  let b=document.createElement('button');
+  b.className='light';
+  b.style.display='block';
+  b.style.width='100%';
+  b.textContent=v;
+  b.onclick=()=>{
+   document.getElementById('practiceFeedback').textContent=
+    i===0?'Benar! Pintar sekali! ⭐':'Coba lagi ya! Perhatikan jarum pendek.';
+   if(i===0&&!practiceDone){stars+=1;practiceDone=true;saveStars();}
+  };
+  document.getElementById('practiceOptions').appendChild(b);
+ });
+}
+
+function saveStars(){
+ try{localStorage.setItem('rainaStars',stars);}catch(e){}
+ document.getElementById('starCount').textContent=stars+' ⭐ Bintang';
+ document.getElementById('progressBar').style.width=Math.min(stars*5,100)+'%';
+}
+
+try{
+ stars=Number(localStorage.getItem('rainaStars'))||0;
+}catch(e){stars=0;}
+saveStars();
+</script>
+</body>
+  </html>
